@@ -1,9 +1,10 @@
 {
   "name": "@lmarcel/cli",
-  "version": "1.0.1",
+  "version": "1.0.3",
   "description": "",
   "main": "./dist/index.js",
   "bin": {
+    "lmarcel": "bin/l-marcel",
     "l-marcel": "bin/l-marcel",
     "lm": "bin/l-marcel"
   },
