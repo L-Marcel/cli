@@ -1,5 +1,5 @@
 <div valing="top">
-  <h1>@lmarcel <span>cli</span></h1>
+  <h1>l-marcel: <span>cli</span></h1>
   <p>Minha própria CLI para administrar meus projetos.</p>
   <nav>
     <div id="repository-buttons"/>
