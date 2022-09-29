@@ -15,14 +15,12 @@
 
 <br/>
 
-<p>You can install running:</p>
+<p>To use you need to install the <a href="https://cli.github.com/" target="__target__">GitHub CLI</a>! After, you can install running:</p>
 <pre>
 C:\root> <span>npm</span> i -g @lmarcel/cli
 </pre>
 
-<p>To use you need to install the <a href="https://cli.github.com/" target="__target__">GitHub CLI</a>!</p>
-
-<p>After, you can get a list of all current commands:</p>
+<p>You can get a list of all current commands:</p>
 <pre>
 C:\root> <span>lm</span> --help
 </pre>

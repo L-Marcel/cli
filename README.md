@@ -15,14 +15,12 @@
 
 <br/>
 
-<p>Você pode instalar executando o comando:</p>
+<p>Para usar, você precisa ter instalado o <a href="https://cli.github.com/" target="__target__">GitHub CLI</a>! Depois, você pode instalar executando o comando:</p>
 <pre>
 C:\root> <span>npm</span> i -g @lmarcel/cli
 </pre>
 
-<p>Para usar, você precisa ter instalado o <a href="https://cli.github.com/" target="__target__">GitHub CLI</a>!</p>
-
-<p>Depois, você pode obter uma lista com todos os comandos atualmente disponíveis:</p>
+<p>Você pode obter uma lista com todos os comandos atualmente disponíveis:</p>
 <pre>
 C:\root> <span>lm</span> --help
 </pre>
