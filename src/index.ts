@@ -30,7 +30,7 @@ program
   .command("login")
   .description("login with github, it's required")
   .option("-f, --fast", "fast mode", true)
-  .option("-h, --hostname [hostname]", "the hostname of the github instance")
+  .option("-h, --hostname [string]", "the hostname of the github instance")
   .option("-g, --git", "authenticate git with your github credentials", true)
   .option("--ssh", "set ssh git protocol", false)
   .action((options: AuthLoginParams) => {
@@ -59,11 +59,16 @@ program
   .argument("[name]", "name of the new project folder", "")
   .option("-pr, --private", "set private visibility", false)
   .option("-pb, --public", "set public visibility", false)
-  .option("-t, --template [template]", "used template: next")
+  .option("-t, --template <string>", "used template: next")
   .option("-d, --description [string]", "repository description", "")
   .option("--no-clone", "just craate the repository", true)
-  .option("--path [path]", "clone directory")
+  .option("-v, --version [string]", "set version", "0.0.1")
+  .option("-p, --path <string>", "clone directory")
+  .option("-l, --license <string>", "repository license")
   .option("-c, --add-config", "add l-marcel.config.json file", false)
+  .option("-h, --homapage <url>", "repository homapage")
+  //topics
+  .option("-ctd, --add-translated-description <description>", "translated l-marcel.config.json description", true)
   .action((arg: string, options: CreateProjectOptions) => {
     Process.checkIsAuth(() => {
       Process.run(Project.create, arg, options);
@@ -78,6 +83,17 @@ program
   .action((name: string, path?: string) => {
     Process.checkIsAuth(() => {
       Process.run(Repository.clone, name, path);
+    });
+  });
+
+program
+  .command("push")
+  .description("create a commit and push ALL changes")
+  .argument("<message>", "commit message")
+  .argument("[dir]", "directory to commit", ".")
+  .action((message: string, dir?: string) => {
+    Process.checkIsAuth(() => {
+      Process.run(Repository.commit, message, dir);
     });
   });
 

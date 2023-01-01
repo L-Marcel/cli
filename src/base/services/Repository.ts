@@ -4,12 +4,18 @@ import { Template } from "../Template";
 import { Process } from "../Process";
 import { GithubAuthError } from "../../errors/GithubAuthError";
 import kleur from "kleur";
+import { GithubRepositoryNotFound } from "../../errors/GithubRepositoryNotFound";
+import { RepositoryCommitError } from "../../errors/RepositoryCommitError";
 
 export type RepositoryVisibility = "public" | "private";
 
 export interface RepositoriesNameResponse {
   exitCode: boolean;
   repositoriesName: string[];
+}
+
+export interface RepositoryCommitResponse {
+  exitCode: boolean;
 }
 
 export class Repository {
@@ -40,10 +46,13 @@ export class Repository {
       child.stderr.on("data", (data) => {
         const response = data.toString();
 
-        if(!/Cloning into/g.test(response)) {
-          reject(/(gh auth login)|(denied)/g.test(data.toString())? new GithubAuthError():"error");
+        if(/Could not resolve to a Repository/g.test(response) && /'/g.test(response)) {
+          const [,repositoryName] = response.split("'");
+          reject(new GithubRepositoryNotFound(repositoryName));
         } else if(/Cloning into/g.test(response)) {
           Process.info(`Cloning into ${kleur.yellow(targetDir)}...`);
+        } else {
+          reject(/(gh auth login)|(denied)/g.test(data.toString())? new GithubAuthError():"error");
         }
       });
 
@@ -80,6 +89,25 @@ export class Repository {
           exitCode: code === 0? true:false,
           repositoriesName
         });
+      });
+    });
+  }
+
+  static async commit(message: string, dir = ".") {
+    return new Promise<boolean>((resolve, reject) => {
+      const child = spawn(`cd ${dir} && git add . && git commit -m "${message}" && git push`, {
+        shell: true,
+      });
+
+      child.on("exit", (code) => {
+        if(code === 0) {
+          const isRootDir = dir === ".";
+
+          Process.success(`Commit ${kleur.green(`"${message}"`)} pushed ${isRootDir? "":`in ${kleur.green(dir)}`}`);
+          resolve(true);
+        } else {
+          reject(new RepositoryCommitError());
+        }
       });
     });
   }
