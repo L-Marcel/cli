@@ -5,7 +5,7 @@ import { GithubAuthError } from "../errors/GithubAuthError";
 import { GithubError } from "../errors/GithubError";
 import { InvalidTemplateError } from "../errors/InvalidTemplateError";
 import { Process } from "./Process";
-import { Repository, RepositoryVisibility } from "./Repository";
+import { Repository, RepositoryVisibility } from "./services/Repository";
 import { Template, TemplateType } from "./Template";
 
 export interface CreateProjectParams {
@@ -13,21 +13,22 @@ export interface CreateProjectParams {
   template: TemplateType;
   name: string;
   description: string;
-};
-
+}
 
 export class Project {
   static async create(arg: string, options: CreateProjectOptions) {
     const questions: PromptOptions = [];
   
-    const usedRepositoryNames = await Repository.getAllRepositoriesName()
+    const { 
+      repositoriesName: usedRepositoryNames 
+    } = await Repository.getAllRepositoriesName()
       .then(names => names)
       .catch(err => {
         if(err === "auth"){
           throw new GithubAuthError();
         } else {
           throw new GithubError();
-        };
+        }
       });
   
     if(!arg || usedRepositoryNames.includes(arg)) {
@@ -42,7 +43,7 @@ export class Project {
             return "The name should have at least a character!";
           } else if(usedRepositoryNames.includes(value)) {
             return "The name is already in use!";
-          };
+          }
   
           return true;
         },
@@ -50,9 +51,9 @@ export class Project {
           return value.replace(/ /g, "-");
         }
       });
-    };
+    }
   
-    let description = options.description;
+    const description = options.description;
     if(!description) {
       questions.push({
         type: "input",
@@ -60,7 +61,7 @@ export class Project {
         choices: Template.getCapitalizedList(),
         name: "description"
       });
-    };
+    }
 
     const templateIsInvalid = !Template.isValid(options.template);
     if(templateIsInvalid) {
@@ -70,7 +71,7 @@ export class Project {
         choices: Template.getCapitalizedList(),
         name: "template"
       });
-    };
+    }
   
     let visibility: RepositoryVisibility = "public";
     const visibilityIsNotDefined = options.public === options.private;
@@ -83,7 +84,7 @@ export class Project {
       });
     } else if(options.private) {
       visibility = "private";
-    };
+    }
   
     const answers = await enquirer.prompt<Partial<CreateProjectParams>>(questions);
   
@@ -94,11 +95,11 @@ export class Project {
   
     if(!Template.isValid(template)) {
       throw new InvalidTemplateError();
-    };
+    }
   
     if(!answers.visibility && visibilityIsNotDefined) {
       visibility = "private";
-    };
+    }
   
     const params: CreateProjectParams = {
       description,
@@ -114,9 +115,8 @@ export class Project {
   
     if(options.clone) {
       await Repository.clone(params.name, options.path);
-      Process.success(`Repository ${kleur.green(params.name)} was cloned...`);
-    };
+    }
 
     return true;
-  };
-};
+  }
+}

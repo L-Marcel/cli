@@ -1,10 +1,12 @@
-import { spawn } from "child_process";
+#!/usr/bin/env node
+
 import { program } from "commander";
 import enquirer from "enquirer";
 import { Process } from "./base/Process";
 import { Project } from "./base/Project";
-import { Repository } from "./base/Repository";
+import { Repository } from "./base/services/Repository";
 import { TemplateType } from "./base/Template";
+import { Auth, AuthLoginParams } from "./base/services/Auth";
 
 export type Args = string[];
 export type PromptOptions = Parameters<typeof enquirer.prompt>[0];
@@ -20,20 +22,36 @@ export type CreateProjectOptions = {
 };
 
 program
-  .name('lm, l-marcel')
-  .description('My CLI')
-  .version('0.0.1');
+  .name("lm, l-marcel")
+  .description("L-Marcel CLI")
+  .version("1.0.4");
 
 program
   .command("login")
   .description("login with github, it's required")
+  .option("-f, --fast", "fast mode", true)
+  .option("-h, --hostname [hostname]", "the hostname of the github instance")
+  .option("-g, --git", "authenticate git with your github credentials", true)
+  .option("--ssh", "set ssh git protocol", false)
+  .action((options: AuthLoginParams) => {
+    Process.run(Auth.login, options);
+  });
+
+program
+  .command("logout")
+  .description("logged out of github account")
+  .argument("[hostname]", "account username or hostname")
+  .action((hostname: string) => {
+    Process.run(Auth.logout, hostname);
+  });
+
+program
+  .command("status")
+  .description("check your authentication state")
+  .argument("[hostname]", "account username or hostname")
   .action(() => {
-    Process.info("Starting github auth...");
-    spawn("gh auth login", {
-      shell: true,
-      stdio: [0, 1, 2],
-    });
-  })
+    Process.run(Auth.status, true);
+  });
 
 program
   .command("create")
@@ -41,22 +59,26 @@ program
   .argument("[name]", "name of the new project folder", "")
   .option("-pr, --private", "set private visibility", false)
   .option("-pb, --public", "set public visibility", false)
-  .option("-t, --template [template]", "used template: next, react, express or node")
+  .option("-t, --template [template]", "used template: next")
   .option("-d, --description [string]", "repository description", "")
   .option("--no-clone", "just craate the repository", true)
   .option("--path [path]", "clone directory")
   .option("-c, --add-config", "add l-marcel.config.json file", false)
   .action((arg: string, options: CreateProjectOptions) => {
-    Process.run(Project.create, arg, options);
+    Process.checkIsAuth(() => {
+      Process.run(Project.create, arg, options);
+    });
   });
 
 program
   .command("clone")
-  .argument("[name]", "repository name", "")
-  .argument("[path]", "clone directory")
   .description("clone a github repository")
+  .argument("<name>", "repository name")
+  .argument("[path]", "clone directory")
   .action((name: string, path?: string) => {
-    Process.run(Repository.clone, name, path);
+    Process.checkIsAuth(() => {
+      Process.run(Repository.clone, name, path);
+    });
   });
 
 program.parse();

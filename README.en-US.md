@@ -3,7 +3,7 @@
   <p>My own CLI to manage my projects.</p>
   <nav>
     <div id="repository-buttons"/>
-    <a class="navigation-link disabled" href="https://github.com/L-Marcel/cli/blob/main/README.md" target="__blank__">
+    <a class="navigation-link disabled" href="https://github.com/L-Marcel/cli/blob/master/README.md" target="__blank__">
       pt-br
     </a>
     <span class="disabled">•</span>

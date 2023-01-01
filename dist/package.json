@@ -1,0 +1,30 @@
+{
+  "name": "@lmarcel/cli",
+  "version": "1.0.9",
+  "author": "Lucas Marcel Silva de Brito",
+  "description": "",
+  "license": "MIT",
+  "main": "./src/index.js",
+  "bin": {
+    "lmarcel": "bin/l-marcel",
+    "l-marcel": "bin/l-marcel",
+    "lm": "bin/l-marcel"
+  },
+  "scripts": {
+    "start": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/L-Marcel/cli.git"
+  },
+  "keywords": [
+    "cli",
+    "git",
+    "gh",
+    "nextjs"
+  ],
+  "bugs": {
+    "url": "https://github.com/L-Marcel/cli/issues"
+  },
+  "homepage": "https://github.com/L-Marcel/cli"
+}
