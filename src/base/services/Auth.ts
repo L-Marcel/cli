@@ -3,6 +3,7 @@ import { spawn } from "child_process";
 import cp from "copy-paste";
 import kleur from "kleur";
 import open from "open";
+import { GithubAuthError } from "../../errors/GithubAuthError";
 
 export interface AuthStatus {
   exitCode: boolean;
@@ -22,7 +23,14 @@ export class Auth {
     return new Promise<boolean>((resolve) => {
       Process.info("Starting github auth...");
        
-      const child = spawn(`gh auth login ${hostname? `--hostname ${hostname} `:""}--git-protocol ${ssh? "shh":"https"} -w`, {
+      const child = spawn("gh", [
+        "auth" ,
+        "login",
+        ...(hostname? ["--hostname", `${hostname}`]:[]),
+        "--git-protocol",
+        `${ssh? "shh":"https"}`,
+        "-w"
+      ], {
         shell: true,
         stdio: ["pipe", "pipe", "pipe"]
       });
@@ -88,7 +96,12 @@ export class Auth {
     }
 
     return new Promise<boolean>((resolve) => {
-      const child = spawn(`gh auth logout -h ${hostname}`, {
+      const child = spawn("gh", [
+        "auth",
+        "logout",
+        "-h",
+        hostname as string
+      ], {
         shell: true,
         stdio: ["pipe", "pipe", "pipe"]
       });
@@ -126,9 +139,14 @@ export class Auth {
       let isLogged = false;
       const hostnames: string[] = [];
 
-      const child = spawn("gh auth status", {
-        shell: true
-      });
+      const child = spawn("gh",
+        [
+          "auth", 
+          "status",
+          "--show-token"
+        ], {
+          shell: true
+        });
 
       child.stderr.on("data", (data) => {
         const response = data.toString();
@@ -146,8 +164,15 @@ export class Auth {
             const [account, authType] = accountMessage.split(" ");
 
             const haveOAuthToken = /oauth_token/g.test(authType);
+            let token = "";
             
-            hostnames.push(`${hostname} | ${account}${haveOAuthToken? " | oauth_token":""}`);
+            if(haveOAuthToken && /Token: /g.test(accountMessage)) {
+              const [,oAuthTokenMessage] = accountMessage.split("Token: ");
+              const [oAuthToken] = oAuthTokenMessage.split("\n");
+              token = oAuthToken;
+            }
+            
+            hostnames.push(`${hostname} | ${account}${haveOAuthToken? ` | ${token}`:""}`);
 
             if(withLogs) {
               Process.success(`Logged in to ${kleur.green(hostname)} as ${kleur.green(account)} ${haveOAuthToken? `(${kleur.yellow("oauth_token")})`:""}`);
@@ -164,5 +189,16 @@ export class Auth {
         });
       });
     });
+  }
+
+  static async getOAuthToken() {
+    const { hostnames, isLogged } = await Auth.status();
+
+    if(isLogged) {
+      const [,,token] = hostnames[0].split(" | ");
+      return token;
+    }
+
+    throw new GithubAuthError();
   }
 }

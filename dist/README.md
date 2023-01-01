@@ -6,7 +6,7 @@ My own CLI to manage my projects.
 
 To use you need to install the [GitHub CLI](https://cli.github.com/)! After, you can install running:
 ```
-C:\root> npm i -g @lmarcel/cli
+C:\root> npm i -g @lmarcel/cli@stable
 ```
 
 You can get a list of all current commands:

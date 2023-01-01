@@ -5,7 +5,6 @@ import enquirer from "enquirer";
 import { Process } from "./base/Process";
 import { Project } from "./base/Project";
 import { Repository } from "./base/services/Repository";
-import { TemplateType } from "./base/Template";
 import { Auth, AuthLoginParams } from "./base/services/Auth";
 
 export type Args = string[];
@@ -14,11 +13,17 @@ export type PromptOptions = Parameters<typeof enquirer.prompt>[0];
 export type CreateProjectOptions = {
   public: boolean;
   private: boolean;
-  template?: TemplateType;
+  template?: string;
+  version: string;
   addConfig: boolean;
   clone: boolean;
   description: string;
   path?: string;
+  self?: string;
+  translatedDescription?: string;
+  pinned: boolean;
+  figma?: string;
+  docs?: string;
 };
 
 program
@@ -57,21 +62,21 @@ program
   .command("create")
   .description("create a new project and clone the repository")
   .argument("[name]", "name of the new project folder", "")
+  .argument("[formattedName]", "name to display in l-marcel.config.json", "")
   .option("-pr, --private", "set private visibility", false)
   .option("-pb, --public", "set public visibility", false)
-  .option("-t, --template <string>", "used template: next")
-  .option("-d, --description [string]", "repository description", "")
+  .option("-t, --template <string>", "used template: next") 
+  .option("-d, --description <string>", "repository description", "")
   .option("--no-clone", "just craate the repository", true)
-  .option("-v, --version [string]", "set version", "0.0.1")
   .option("-p, --path <string>", "clone directory")
-  .option("-l, --license <string>", "repository license")
   .option("-c, --add-config", "add l-marcel.config.json file", false)
-  .option("-h, --homapage <url>", "repository homapage")
-  //topics
-  .option("-ctd, --add-translated-description <description>", "translated l-marcel.config.json description", true)
-  .action((arg: string, options: CreateProjectOptions) => {
+  .option("-td, --translated-description <string>", "translated l-marcel.config.json description", true)
+  .option("-fi, --figma <string>", "set l-marcel.config.json figma link", "")
+  .option("--docs <string>", "set l-marcel.config.json documentation link", "")
+  .option("-s, --self <url>", "set l-marcel.config.json self link", "")  
+  .action((name: string, formattedName: string, options: CreateProjectOptions) => {
     Process.checkIsAuth(() => {
-      Process.run(Project.create, arg, options);
+      Process.run(Project.create, name, formattedName, options);
     });
   });
 

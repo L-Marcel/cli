@@ -1,5 +1,4 @@
 import { spawn } from "child_process";
-import { CreateProjectParams } from "../Project";
 import { Template } from "../Template";
 import { Process } from "../Process";
 import { GithubAuthError } from "../../errors/GithubAuthError";
@@ -19,15 +18,34 @@ export interface RepositoryCommitResponse {
 }
 
 export class Repository {
-  static async create({ name, template, visibility, description  }: CreateProjectParams) {
+  public name = "";
+  public template = {
+    name: "next",
+    isExernal: false
+  };
+  public description?: string;
+  public visibility: RepositoryVisibility = "public";
+
+  async create() {
     return new Promise<boolean>((resolve, reject) => {
-      const child = spawn(`gh repo create ${name} --template ${Template.getRepositoryTemplateFullname(template)} --description "${description}" --${visibility}`, {
-        shell: true,
-      });
+      const child = spawn("gh", 
+        [
+          "repo", "create", this.name, 
+          "--template", Template.getRepositoryTemplateFullname(
+            this.template.name, 
+            this.template.isExernal
+          ), 
+          ...(this.description? ["--description", `"${this.description}"`]:[]),
+          `--${this.visibility}`
+        ], {
+          shell: true,
+        });
 
       child.stderr.on("data", (data) => {
         reject(/gh auth login/g.test(data.toString())? "auth":"error");
       });
+
+
 
       child.on("exit", (code) => {
         resolve(code === 0? true:false);
@@ -39,7 +57,9 @@ export class Repository {
     const targetDir = dir ?? name;
 
     return new Promise<boolean>((resolve, reject) => {
-      const child = spawn(`gh repo clone ${name} ${targetDir}`, {
+      const child = spawn("gh", [
+        "repo", "clone", name, targetDir
+      ], {
         shell: true,
       });
 
@@ -70,7 +90,9 @@ export class Repository {
     return new Promise<RepositoriesNameResponse>((resolve, reject) => {
       let repositoriesName: string[] = [];
 
-      const child = spawn("gh repo list --json name --limit 9999999999999", {
+      const child = spawn("gh", [
+        "repo", "list", "--json name", "--limit", "9999999999999"
+      ], {
         shell: true,
       });
   

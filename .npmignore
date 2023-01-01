@@ -1,6 +1,16 @@
 ./src
+
 node_modules
 tsconfig.json
 
 .gitignore
 .npmignore
+
+README.md
+README.en-us.md
+
+l-marcel.config.json
+
+.eslintrc.json
+.editorconfig
+.tsconfig.json
