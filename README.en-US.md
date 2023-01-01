@@ -22,13 +22,11 @@
 
 <h2>Commands:</h2>
 <pre>
-<code>
-<span>login</span> [options]                          | login with github, it's required
-<span>logout</span> [hostname]                        | logged out of github account
-<span>status</span> [hostname]                        | check your authentication state
-<span>create</span> [options] [name] [formattedName]  | create a new project and clone the repository
-<span>clone</span> &lt;name> [path]                      | clone a github repository
-<span>push</span> &lt;message> [dir]                     | create a commit and push ALL changes
-<span>help</span> [command]                           | display help for command
-</code>
+login [options]                          | login with github, it's required
+logout [hostname]                        | logged out of github account
+status [hostname]                        | check your authentication state
+create [options] [name] [formattedName]  | create a new project and clone the repository
+clone &lt;name> [path]                      | clone a github repository
+push &lt;message> [dir]                     | create a commit and push ALL changes
+help [command]                           | display help for command
 </pre>

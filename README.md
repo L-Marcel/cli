@@ -22,13 +22,11 @@
 
 <h2>Comandos:</h2>
 <pre>
-<code>
-<span>login</span> [options]                          | entrar com o github, é necessário
-<span>logout</span> [hostname]                        | sair da conta do github
-<span>status</span> [hostname]                        | checar sua autenticação
-<span>create</span> [options] [name] [formattedName]  | criar um novo projeto e clonar o repositório
-<span>clone</span> &lt;name> [path]                      | clonar um repositório do github
-<span>push</span> &lt;message> [dir]                     | cria um commit e envia TODAS as alterações
-<span>help</span> [command]                           | mostra as informações auxiliares dos comandos
-</code>
+login [options]                          | entrar com o github, é necessário
+logout [hostname]                        | sair da conta do github
+status [hostname]                        | checar sua autenticação
+create [options] [name] [formattedName]  | criar um novo projeto e clonar o repositório
+clone &lt;name> [path]                      | clonar um repositório do github
+push &lt;message> [dir]                     | cria um commit e envia TODAS as alterações
+help [command]                           | mostra as informações auxiliares dos comandos
 </pre>
