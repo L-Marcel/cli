@@ -27,6 +27,6 @@ logout [hostname]                        | sair da conta do github
 status [hostname]                        | checar sua autenticação
 create [options] [name] [formattedName]  | criar um novo projeto e clonar o repositório
 clone &lt;name> [path]                      | clonar um repositório do github
-push &lt;message> [dir]                     | cria um commit e envia TODAS as alterações
-help [command]                           | mostra as informações auxiliares dos comandos
+push &lt;message> [dir]                     | criar um commit e enviar TODAS as alterações
+help [command]                           | mostrar as informações auxiliares dos comandos
 </pre>
