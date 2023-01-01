@@ -29,7 +29,7 @@ export type CreateProjectOptions = {
 program
   .name("lm, l-marcel")
   .description("L-Marcel CLI")
-  .version("1.0.4");
+  .version("1.2.9");
 
 program
   .command("login")

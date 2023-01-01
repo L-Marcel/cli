@@ -1,6 +1,6 @@
 {
   "name": "@lmarcel/cli",
-  "version": "1.2.5",
+  "version": "1.2.9",
   "description": "",
   "workspaces": [
     "dist"
@@ -22,7 +22,7 @@
     "build": "tsc",
     "lint": "eslint --fix . --ext .ts -c .eslintrc.json",
     "start": "node dist/src/index.js",
-    "publish": "npm publish -w dist --tag beta",
+    "publish": "npm publish -w dist --tag latest",
     "publish:stable": "npm publish -w dist --tag stable"
   },
   "author": "Lucas Marcel Silva de Brito",

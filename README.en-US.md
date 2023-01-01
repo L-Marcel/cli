@@ -17,10 +17,18 @@
 
 <p>To use you need to install the <a href="https://cli.github.com/" target="__target__">GitHub CLI</a>! After, you can install running:</p>
 <pre>
-C:\root> <span>npm</span> i -g @lmarcel/cli
+<span>npm</span> i -g @lmarcel/cli
 </pre>
 
-<p>You can get a list of all current commands:</p>
+<h2>Commands:</h2>
 <pre>
-C:\root> <span>lm</span> --help
+<code>
+<span>login</span> [options]                          | login with github, it's required
+<span>logout</span> [hostname]                        | logged out of github account
+<span>status</span> [hostname]                        | check your authentication state
+<span>create</span> [options] [name] [formattedName]  | create a new project and clone the repository
+<span>clone</span> &lt;name> [path]                      | clone a github repository
+<span>push</span> &lt;message> [dir]                     | create a commit and push ALL changes
+<span>help</span> [command]                           | display help for command
+</code>
 </pre>
